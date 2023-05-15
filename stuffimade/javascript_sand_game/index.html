@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stuff I've Made</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <a href="/stuffimade">Return to Stuff I Made</a>
+</head>
+<canvas id="myCanvas"></canvas>
+<button onclick = "blueliquid()">Water</button>
+<button onclick = "greensand()">Green Sand</button>
+<button onclick = "redsand()">Red Sand</button>
+<button onclick = "lava()">Lava</button>
+<button onclick = "stone()">Stone</button>
+<button onclick = "sand()">Sand</button>
+<button onclick = "air()">Eraser</button>
+<button onclick = "reset()">Reset</button>
+<script>
+     var selectedMaterial = ["sand"];
+     var lor = 0
+
+     var water = {name: "water", color: "rgb(54, 194, 255, 0.5)", alpha: 0.5, pressure: 1, x_velocity: 0, y_velocity: 0};
+
+     var pixelCount = 0;
+     var res = 6;
+     var canvas = document.getElementById("myCanvas");
+     var ctx = canvas.getContext("2d");
+
+
+     // set the canvas dimensions
+     canvas.width = 500;
+     canvas.height = 500;
+
+     // calculate the pixel grid dimensions
+     var gridWidth = Math.ceil(canvas.width / res);
+     var gridHeight = Math.ceil(canvas.height / res);
+
+     // create a 2D array to store the pixel grid
+     var pixelGrid = [];
+     for (var i = 0; i < gridWidth; i++) {
+       var row = [];
+       for (var j = 0; j < gridHeight; j++) {
+         row.push("air");
+       }
+       pixelGrid.push(row);
+     }
+
+     function sand() {
+        selectedMaterial = "sand";
+     }
+     function blueliquid() {
+        selectedMaterial = "water";
+     }
+     function redsand() {
+        selectedMaterial = "redsand";
+     }
+     function greensand() {
+        selectedMaterial = "greensand";
+     }
+     function stone() {
+        selectedMaterial = "stone";
+     }
+     function lava() {
+        selectedMaterial = "lava";
+     }
+     function air() {
+        selectedMaterial = "air";
+     }
+     function reset() {
+        for (i = 0; i < gridWidth; i++) {
+            for (j = 0; j < gridHeight; j++) {
+                pixelGrid[i][j] = "air";
+            }
+        }
+     }
+
+     // track the mouse position
+     var mouseX = -1;
+     var mouseY = -1;
+
+
+     // add a mousemove listener to update the mouse position
+     canvas.addEventListener("mousemove", function(event) {
+       mouseX = event.clientX-710;
+       mouseY = event.clientY-224;
+     });
+     mouseDown = false;
+
+
+     window.onmousedown = () => {
+     ++mouseDown;
+     }
+     window.onmouseup = () => {
+     --mouseDown;
+     }
+
+
+     function sleep(milliseconds) {
+       const date = Date.now();
+       let currentDate = null;
+       do {
+         currentDate = Date.now();
+       } while (currentDate - date < milliseconds);
+     }
+
+     document.addEventListener("keyup", function(event) {
+       if (event.keyCode === 49) {
+         selectedMaterial = "water";
+         }
+       if (event.keyCode === 50) {
+         selectedMaterial = "sand";
+         }
+       });
+
+     function draw() {
+       // clear the canvas
+       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+       // add a sand particle at the mouse cursor position
+       if (mouseX >= 0 && mouseY >= 0 && mouseDown) {
+         var x = Math.floor(mouseX / res);
+         var y = Math.floor(mouseY / res);
+         if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+               pixelCount++;
+               pixelGrid[x][y] = selectedMaterial;
+         }
+       }
+
+       document.addEventListener("keyup", function(event) {
+         if (event.keyCode === 13) {
+           console.log(pixelCount);
+           }
+         });
+
+       // update the pixel grid
+       for (var x = 0; x < gridWidth; x++) {
+         for (var y = gridHeight - 1; y >= 0; y--) {
+           if (pixelGrid[x][y] == "water" || pixelGrid[x][y] == "sand" || pixelGrid[x][y] == "redsand" || pixelGrid[x][y] == "greensand" || pixelGrid[x][y] == "lava") {
+             // particle found, check for collisions and move down
+             if (y === gridHeight - 1 || pixelGrid[x][y + 1] == "sand" || pixelGrid[x][y + 1] == "water" || pixelGrid[x][y+1] == "redsand" || pixelGrid[x][y+1] == "greensand" || pixelGrid[x][y+1] == "stone" || pixelGrid[x][y+1] == "lava") {
+               lor = Math.round(Math.random());
+               if (x === gridWidth - 1 || x === 0) {continue;}
+               else {
+               if (pixelGrid[x][y] == "sand"  || pixelGrid[x][y] == "redsand" || pixelGrid[x][y] == "greensand" || pixelGrid[x][y] == "lava") {
+                 if (pixelGrid[x-1][y+1] == "air" && Math.random() >= 0.5) {
+                   pixelGrid[x-1][y+1] = pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 if (pixelGrid[x+1][y+1] == "air" && Math.random() >= 0.5) {
+                   pixelGrid[x+1][y+1] = pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 if (pixelGrid[x][y+1] == "water") {
+                   pixelGrid[x][y+1] = pixelGrid[x][y];
+                   pixelGrid[x][y] = "water";
+                 }
+               }
+               if (pixelGrid[x][y] == "water" && Math.random() >= 0.5) {
+                 if (pixelGrid[x-1][y+1] == "air" && lor == 0) {
+                   pixelGrid[x-1][y+1] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 else if (pixelGrid[x+1][y+1] == "air" && lor == 1) {
+                   pixelGrid[x+1][y+1] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 else if (pixelGrid[x+1][y] == "air" && lor == 1) {
+                   pixelGrid[x+1][y] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 else if (pixelGrid[x-1][y] == "air" && lor == 0) {
+                   pixelGrid[x-1][y] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+               }
+               if (pixelGrid[x][y] == "lava" && Math.random() <= 0.5) {
+                 if (Math.random() >= 0.99999) {pixelGrid[x][y] = "stone";}
+                 if (pixelGrid[x-1][y] == "water") {
+                   pixelGrid[x-1][y] = "air";
+                   pixelGrid[x][y] = "stone";
+                 }
+                 if (pixelGrid[x+1][y] == "water") {
+                   pixelGrid[x+1][y] = "air";
+                   pixelGrid[x][y] = "stone";
+                 }
+                 if (pixelGrid[x][y-1] == "water") {
+                   pixelGrid[x][y-1] = "air";
+                   pixelGrid[x][y] = "stone";
+                 }
+                 if (pixelGrid[x][y+1] == "water") {
+                   pixelGrid[x][y+1] = "air";
+                   pixelGrid[x][y] = "stone";
+                 }
+                 if (pixelGrid[x][y+1] == "water") {
+                   pixelGrid[x][y+1] = "air";
+                   pixelGrid[x][y] = "stone";
+                 }
+                 if (pixelGrid[x-1][y+1] == "air" && lor == 0) {
+                   pixelGrid[x-1][y+1] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 else if (pixelGrid[x+1][y+1] == "air" && lor == 1) {
+                   pixelGrid[x+1][y+1] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 else if (pixelGrid[x+1][y] == "air" && lor == 1) {
+                   pixelGrid[x+1][y] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+                 else if (pixelGrid[x-1][y] == "air" && lor == 0) {
+                   pixelGrid[x-1][y] =  pixelGrid[x][y];
+                   pixelGrid[x][y] = "air";
+                 }
+               }
+               }
+               // particle is on bottom row or has solid particle below, stop moving
+               continue;
+             } else {
+               // particle is falling, move down and remove from current grid cell
+               pixelGrid[x][y + 1] = pixelGrid[x][y];
+               pixelGrid[x][y] = "air";
+             }
+           }
+         }
+       }
+
+
+       // draw the pixel grid
+       for (var x = 0; x < gridWidth; x++) {
+         for (var y = 0; y < gridHeight; y++) {
+           if (pixelGrid[x][y] == "sand") {
+             // draw a filled rectangle for each "pixel"
+             ctx.fillStyle = "tan";
+             ctx.fillRect(x * res, y * res, res, res);
+           }
+           if (pixelGrid[x][y] == "water") {
+             ctx.fillStyle = water.color;
+             ctx.fillRect(x * res, y * res, res, res);
+           }
+           if (pixelGrid[x][y]== "redsand") {
+             ctx.fillStyle = "red";
+             ctx.fillRect(x * res, y * res, res, res);
+           }
+           if (pixelGrid[x][y] == "greensand") {
+             ctx.fillStyle = "green";
+             ctx.fillRect(x * res, y * res, res, res);
+           }
+           if (pixelGrid[x][y] == "stone") {
+             ctx.fillStyle = "gray";
+             ctx.fillRect(x * res, y * res, res, res);
+           }
+           if (pixelGrid[x][y] == "lava") {
+             ctx.fillStyle = "orange";
+             ctx.fillRect(x * res, y * res, res, res);
+           }
+         }
+       }
+
+
+       // request the next frame of animation
+       requestAnimationFrame(draw);
+     }
+
+
+     // start the animation loop
+     draw();
+   </script>
+</body>
+</html>
