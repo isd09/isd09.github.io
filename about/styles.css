@@ -81,7 +81,12 @@ h1 {
   font-size: 3rem;
   text-align: center;
   text-decoration: underline;
+  position: fixed;
+  top: 7%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
+
 
 h2 {
   color: #bcd979;
@@ -118,4 +123,11 @@ a {
     font-size: 1.2rem;
     line-height: 1.5;
     text-align: center;
+}
+
+#fixed-object {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
