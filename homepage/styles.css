@@ -81,7 +81,12 @@ h1 {
   font-size: 3rem;
   text-align: center;
   text-decoration: underline;
+  position: fixed;
+  top: 7%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
+
 
 h2 {
   color: #bcd979;
