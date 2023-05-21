@@ -15,7 +15,7 @@ function lookup() {
       .then(response => response.json())
       .then(data => {
         const textbase = atob(data.content);
-        stringToChunk = textbase.split("\n")
+        stringToChunk = textbase.split("-")
         stringToDisplay = getRandomItem(stringToChunk);
         if (stringToDisplay.length < 5) {lookup();}
         document.getElementById("qotd").innerHTML = stringToDisplay;
