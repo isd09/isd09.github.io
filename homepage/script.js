@@ -1,6 +1,5 @@
 var stringToChunk = "";
-var stringToDisplay = "Oh no! Looks like I'm still loading!";
-
+var stringToDisplay = "";
 
 function getRandomItem(arr) {
     const randomIndex = Math.floor(Math.random() * arr.length);
@@ -15,7 +14,7 @@ function lookup() {
       .then(response => response.json())
       .then(data => {
         const textbase = atob(data.content);
-        stringToChunk = textbase.split("-")
+        stringToChunk = textbase.split("-split-")
         stringToDisplay = getRandomItem(stringToChunk);
         if (stringToDisplay.length < 5) {lookup();}
         document.getElementById("qotd").innerHTML = stringToDisplay;
