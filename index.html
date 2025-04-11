@@ -1,0 +1,371 @@
+<!-- 
+
+This HTML file represents the homepage of the ASTRO Club's official website. It includes the following sections:
+
+1. Head Section:
+    - Meta tags for character set and viewport settings.
+    - Title of the webpage.
+    - Internal CSS styles for various elements including body, navbar, sections, images, and animations.
+
+2. Body Section:
+    - Navbar: A fixed navigation bar with links to different sections of the page.
+    - Home Section: Contains the club's logo, title, subtitle, and introductory text with links to more information and a membership form.
+    - Goal Bar Section: Displays a loading bar indicating the membership goal progress.
+    - About Section: Provides information about the club's founders and their roles.
+    - Events Section: Lists upcoming and past events.
+    - Leadership Section: Details the leadership team with images and contact information.
+    - Business Information Section: Provides contact information for business inquiries.
+
+3. Script Section:
+    - Smooth scrolling for navbar links.
+    - Typewriter effect for animating text.
+    - Intersection Observer for triggering animations when sections come into view.
+    - Function to update the loading bar's progress.
+
+Note: The script includes example usage of setting the loading bar to 46%.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTRO Club</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5e8; /* Beige background */
+            color: #000;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.5s ease-in-out;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #f5f5dc; /* Beige background */
+            border-bottom: 1px solid #ccc;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease-in-out;
+        }
+        .navbar img {
+            height: 40px;
+            margin-right: 20px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .navbar a {
+            display: inline-block;
+            padding: 15px;
+            text-decoration: none;
+            color: #000;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar a:hover {
+            color: #007BFF;
+        }
+        .section {
+            padding: 20px 20px;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .about-images {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .about-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+        .about-item:hover {
+            transform: scale(1.01);
+        }
+        .about-item img {
+            width: 150px;
+            height: 150px;
+            margin-right: 20px;
+            border-radius: 50%; /* Make images circular */
+        }
+        .about-item div {
+            display: flex;
+            flex-direction: column;
+        }
+        .logo {
+            height: 6em; /* Set the height to 6 times the font size of the header */
+            animation: spin 60s linear infinite; /* Add spin animation */
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .home-content {
+            padding: 60px 20px;
+        }
+        .leadership-item img {
+            width: 50px; /* Set the width to a third of the original size */
+            height: 50px; /* Set the height to a third of the original size */
+            margin-right: 20px;
+            border-radius: 50%; /* Make images circular */
+        }
+        .loading-bar-container {
+            width: 60%; /* 100% - 20% on each side */
+            background-color: #f5f5e8;
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 20px 0; /* Center the container */
+        }
+        .loading-bar {
+        width: 0;
+        height: 30px;
+        background: repeating-linear-gradient(
+            -45deg,
+            #303030,
+            #727272 1px,
+            #f5f5e8 20px,
+            #f5f5e8 5px
+        );
+        border-radius: 3px;
+        position: relative;
+        padding: 5px;
+        box-sizing: border-box;
+        }
+        .loading-bar span {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #000000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="logo.png" alt="ASTRO Logo">
+        <a href="#home">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#events">Events</a>
+        <a href="#leadership">Leadership</a>
+        <a href="#business">Business Information</a>
+    </div>
+
+    <div id="home" class="section">
+        <div class="home-content">
+            <img src="logo.png" alt="ASTRO Logo" class="logo">
+            <h1><span id="astro-title"></span></h1>
+            <p><span id="astro-subtitle"></span></p>
+            <p>Right now, we're just getting started, but if you like what you see, head over to <a href="https://docs.google.com/document/d/1vcUoFxgrbh6YgzjxOmePT0cyQ9cjHgPNDrE2ZtsIdIc/edit?tab=t.0" target="_blank">this page</a> to learn more!</p>
+            <p>Or, if you're ready to join, <a href="https://forms.gle/hJZvKgMe2nZs3nxw5" target="_blank">click here</a> and join our Remind for updates on our next projects!</p>
+        </div>
+    </div>
+    <div id="goalbar" class="section">
+        <p style="text-align: left;">Help us reach our membership goal!</p>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar">
+                <span id="loading-bar-percent">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="about" class="section">
+        <h2 class="animate-text" data-text="About Us">About Us</h2>
+        <p>We were founded by a group of passionate students at Carroll High School who've always loved seeing growth in every one of our members.</p>
+        <div class="about-images">
+            <div class="about-item">
+                <img src="ikshaan.png" alt="Ikshaan">
+                <div>
+                    <p><strong>Ikshaan Dhatt</strong> -> <a href="mailto:dhatt.ikshaan@gmail.com" target="_blank">dhatt.ikshaan@gmail.com</a></p>
+                    <p>As one of ASTRO's founders, I've always had a vision for growth at Carroll High School. I enjoy playing tennis, studying for school, and working on this project to help as many students as possible reach their goals!</p>
+                </div>
+            </div>
+            <div class="about-item">
+                <img src="amaan.png" alt="Amaan">
+                <div>
+                    <p><strong>Amaan Farooqi</strong> -> <a href="mailto:amaanmuzamil16@gmail.com" target="_blank">amaanmuzamil16@gmail.com</a></p>
+                    <p>Hi, I'm Amaan, and I love exploring new ideas, whether it's through the logic of code or the thrill of a good debate.  In my free time, I unwind by diving into the world of video games!</p>
+                </div>
+            </div>
+            <div class="about-item">
+                <img src="nayan.png" alt="Nayan">
+                <div>
+                    <p><strong>Nayan Gupta</strong> -> <a href="mailto:nayanpgupta@gmail.com" target="_blank">nayanpgupta@gmail.com</a></p>
+                    <p>As the final founder of ASTRO, I'm a key figure in the club. I'm a master at giving advice for volunteering, classes, and I'm your best friend when it comes to chill talk. Usually, you can find me learning about cool architectural designs or volunteering!</p>
+                </div>
+            </div>
+            <p>But it isn't just us! We also have an amazing team full of people who also share our vision. For more information on them, head to our leadership section!</p>
+
+        </div>
+    </div>
+
+    <div id="events" class="section">
+        <h2 class="animate-text" data-text="Events">Events</h2>
+        <ul>
+            <li> <strong>February</strong>
+                <p>Club Announcement Date @ 5 PM on Sat, Feb 15, 2025 (<strong>Completed</strong>)</p>
+            </li>
+            <li> <strong>March</strong>
+                <p>First Meeting @ 3:45 PM on Tue, Apr 15, 2025 (<strong>Upcoming!</strong>)</p>
+            </li>
+            <li> <strong>April</strong>
+                <p>Nothing planned yet!</p>
+            </li>
+            <li> <strong>May</strong>
+                <p>Nothing planned yet!</p>
+            </li>
+            <li> <strong>Summer</strong>
+                <p>Nothing planned yet!</p>
+            </li>
+            <li> <strong>Next School Year</strong>
+                <p>Nothing planned yet!</p>
+            </li>
+        </ul>
+    </div>
+
+    <div id="leadership" class="section">
+        <h2 class="animate-text" data-text="Leadership">Leadership</h2>
+        <p>Any blank spots are open! Apply for a spot here: __ | </p>
+        <ul>
+            <li class="leadership-item">
+                <div>
+                    <h3><strong>__</strong> -> Event Manager and Host</h3>
+                    <h4>[Email]</h4>
+                </div>
+            </li>
+            <li class="leadership-item">
+                <div>
+                    <h3><strong>__</strong> -> Senior Director -> [Email]</h3>
+                    <p>__ -> Senior Manager A -> [Email]</p>
+                    <p>__ -> Senior Manager B -> [Email]</p>
+                </div>
+            </li>
+            <li class="leadership-item">
+                <div>
+                    <h3><strong>__</strong> -> Junior Director -> [Email]</h3>
+                    <p>__ -> Junior Manager A -> [Email]</p>
+                    <p>__ -> Junior Manager B -> [Email]</p>
+                </div>
+            </li>
+            <li class="leadership-item">
+                <div>
+                    <h3><strong>__</strong> -> Sophomore Director -> [Email]</h3>
+                    <p>__ -> Sophomore Manager A -> [Email]</p>
+                    <p>__ -> Sophomore Manager B -> [Email]</p>
+                </div>
+            </li>
+            <li class="leadership-item">
+                <div>
+                    <h3><strong>__</strong> -> Freshman Director -> [Email]</h3>
+                    <p>__ -> Freshman Manager A -> [Email]</p>
+                    <p>__ -> Freshman Manager B -> [Email]</p>
+                </div>
+            </li>
+            <!-- Add more leadership items as needed -->
+        </ul>
+    </div>
+
+    <div id="business" class="section">
+        <h2 class="animate-text" data-text="Business Information">Business Information</h2>
+        <p>We're always open to new ideas and partnerships, so if you're interested, shoot us an email! We typically respond within 1-2 business days.</p>
+        <p>Email: ikshaan.astro@gmail.com</p>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('.navbar a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            const offset = document.querySelector('.navbar').offsetHeight;
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollBy({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+        function typeWriter(element, text, speed, randomness) {
+            let i = 0;
+            function typing() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed + Math.random() * randomness);
+                }
+            }
+            typing();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const title = document.getElementById('astro-title');
+            const subtitle = document.getElementById('astro-subtitle');
+            typeWriter(title, 'ASTRO', 300 / 200 * 60, 100); // 200 wpm with randomness
+            setTimeout(() => {
+                typeWriter(subtitle, 'Achieving Success through Transformative Research and Outreach.', 10 / 1000 * 60, 100); // 200 wpm with randomness
+            }, 0); // Delay to start subtitle typing after title
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        const text = element.getAttribute('data-text');
+                        element.innerHTML = '';
+                        typeWriter(element, text, 300 / 200 * 60, 100);
+                        observer.unobserve(element);
+                        element.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.animate-text').forEach(element => {
+                observer.observe(element);
+            });
+
+            const sections = document.querySelectorAll('.section');
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+        });
+
+        function setLoadingBar(percent) {
+            const loadingBar = document.getElementById('loading-bar');
+            const loadingBarPercent = document.getElementById('loading-bar-percent');
+            loadingBar.style.width = percent + '%';
+            loadingBarPercent.textContent = percent + '%';
+        }
+
+        // Example usage: set the loading bar to 50%
+        setLoadingBar(50);
+    </script>
+</body>
+</html>
